@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: invent-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: invent-service
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: invent-service # Service_invent.yaml будет смотреть на этот лейбл Подов
+    spec:
+      containers:
+        - name: inventproject
+          image: johnynice/inventproject:1
+          #imagePullPolicy: IfNotPresent #Использовать образ из DockerHUb, если не нашли локально
+          ports:
+            - containerPort: 8080
+          env:
+            - name: POSTGRES_USER
+              value: myuser
+            - name: POSTGRES_PASSWORD
+              value: mypassword
