@@ -1,6 +1,7 @@
 package com.example.inventory_service.controller;
 
 import com.example.inventory_service.dto.InventoryReserveRequest;
+import com.example.inventory_service.dto.ProductReleaseRequest;
 import com.example.inventory_service.service.InventoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,16 @@ public class InventoryController {
             inventoryService.reserve(request);
             return ResponseEntity.ok().build();
         } catch (RuntimeException ex) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @PostMapping("/release")
+    public ResponseEntity<Void> release(@RequestBody ProductReleaseRequest request) {
+        try {
+            inventoryService.release(request);
+            return ResponseEntity.ok().build();
+        } catch (RuntimeException e) {
             return ResponseEntity.badRequest().build();
         }
     }
