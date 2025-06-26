@@ -18,7 +18,7 @@ public class InventoryItem {
     private UUID id;
 
     @Column(nullable = false, unique = true)
-    private String productCode;
+    private String productName;
 
     @Column(nullable = false)
     private int availableCount;

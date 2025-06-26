@@ -6,6 +6,6 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class InventoryReserveRequest {
-    private String productCode;
+    private java.util.UUID id;
     private int quantity;
 }

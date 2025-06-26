@@ -6,6 +6,6 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProductReleaseRequest {
-    private String productCode;
+    private java.util.UUID id;
     private int quantity;
 }

@@ -14,7 +14,7 @@ public class InventoryService {
     private final InventoryRepository inventoryRepository;
 
     public void reserve(InventoryReserveRequest request) {
-        InventoryItem item = inventoryRepository.findByProductCode(request.getProductCode())
+        InventoryItem item = inventoryRepository.findById(request.getId())
                 .orElseThrow(() -> new RuntimeException("Товар не найден"));
 
         if (item.getAvailableCount() < request.getQuantity()) {
@@ -26,9 +26,17 @@ public class InventoryService {
     }
 
     public void release(ProductReleaseRequest request) {
-        InventoryItem item = inventoryRepository.findByProductCode(request.getProductCode())
+        InventoryItem item = inventoryRepository.findById(request.getId())
                 .orElseThrow(() -> new RuntimeException("Товар не найден"));
         item.setAvailableCount(item.getAvailableCount() + request.getQuantity());
         inventoryRepository.save(item);
+    }
+
+    public InventoryItem createItem(String productName, int count) {
+        InventoryItem item = InventoryItem.builder()
+                .productName(productName)
+                .availableCount(count)
+                .build();
+        return inventoryRepository.save(item);
     }
 }
