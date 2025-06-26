@@ -1,4 +1,4 @@
 FROM amazoncorretto:17-alpine
-COPY invent_service2.jar inventproject2.jar
+COPY invent_service7.jar inventproject7.jar
 EXPOSE 8080
-ENTRYPOINT ["java","-jar","inventproject2.jar"]
+ENTRYPOINT ["java","-jar","inventproject7.jar"]

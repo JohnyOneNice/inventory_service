@@ -5,13 +5,19 @@ import com.example.inventory_service.dto.ProductReleaseRequest;
 import com.example.inventory_service.model.InventoryItem;
 import com.example.inventory_service.repository.InventoryRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
+import com.example.inventory_service.dto.InventoryReservedEvent;
+import com.example.inventory_service.dto.InventoryReservationFailedEvent;
+
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class InventoryService {
 
     private final InventoryRepository inventoryRepository;
+    private final KafkaTemplate<String, Object> kafkaTemplate;
 
     public void reserve(InventoryReserveRequest request) {
         InventoryItem item = inventoryRepository.findById(request.getId())
@@ -38,5 +44,21 @@ public class InventoryService {
                 .availableCount(count)
                 .build();
         return inventoryRepository.save(item);
+    }
+
+    public boolean hasSufficientInventory(UUID id, int count) {
+        return inventoryRepository.findById(id)
+                .map(item -> item.getAvailableCount() >= count)
+                .orElse(false);
+    }
+
+    public void publishInventoryReserved(UUID id, int count) {
+        InventoryReservedEvent event = new InventoryReservedEvent(id, count);
+        kafkaTemplate.send("inventory-events", event);
+    }
+
+    public void publishInventoryReservationFailed(UUID id, int count) {
+        InventoryReservationFailedEvent event = new InventoryReservationFailedEvent(id, count);
+        kafkaTemplate.send("inventory-events", event);
     }
 }
