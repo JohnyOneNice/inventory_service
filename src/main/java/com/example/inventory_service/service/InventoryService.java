@@ -54,11 +54,11 @@ public class InventoryService {
 
     public void publishInventoryReserved(UUID id, int count) {
         InventoryReservedEvent event = new InventoryReservedEvent(id, count);
-        kafkaTemplate.send("inventory-events", event);
+        kafkaTemplate.send("inventory-reserved", event);
     }
 
     public void publishInventoryReservationFailed(UUID id, int count) {
         InventoryReservationFailedEvent event = new InventoryReservationFailedEvent(id, count);
-        kafkaTemplate.send("inventory-events", event);
+        kafkaTemplate.send("inventory-failed", event);
     }
 }
