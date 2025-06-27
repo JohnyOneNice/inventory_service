@@ -9,6 +9,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import com.example.inventory_service.dto.InventoryReservedEvent;
 import com.example.inventory_service.dto.InventoryReservationFailedEvent;
+import com.example.inventory_service.dto.OrderCreatedEvent;
 
 import java.util.UUID;
 
@@ -52,9 +53,15 @@ public class InventoryService {
                 .orElse(false);
     }
 
-    public void publishInventoryReserved(UUID id, int count) {
-        InventoryReservedEvent event = new InventoryReservedEvent(id, count);
-        kafkaTemplate.send("inventory-reserved", event);
+    public void publishInventoryReserved(OrderCreatedEvent event) {
+        InventoryReservedEvent reservedEvent = InventoryReservedEvent.builder()
+            .orderId(event.getOrderId())
+            .userId(event.getUserId())
+            .price(event.getPrice())
+            .deliverySlotId(event.getDeliverySlotId())
+            .deliveryDate(event.getDeliveryDate())
+            .build();
+        kafkaTemplate.send("inventory-reserved", reservedEvent);
     }
 
     public void publishInventoryReservationFailed(UUID id, int count) {

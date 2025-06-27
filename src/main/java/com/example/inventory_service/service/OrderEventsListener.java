@@ -16,7 +16,7 @@ public class OrderEventsListener {
         if (inventoryService.hasSufficientInventory(event.getProductId(), event.getProductCount())) {
             try {
                 inventoryService.reserve(new InventoryReserveRequest(event.getProductId(), event.getProductCount()));
-                inventoryService.publishInventoryReserved(event.getProductId(), event.getProductCount());
+                inventoryService.publishInventoryReserved(event);
             } catch (RuntimeException e) {
                 inventoryService.publishInventoryReservationFailed(event.getProductId(), event.getProductCount());
             }
